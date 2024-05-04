@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Row, Col } from "antd";
 import { Link } from "react-router-dom";
@@ -9,7 +9,6 @@ const LoginForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
     loginUser(values.email, values.password);
   };
   return (
@@ -78,7 +77,7 @@ const LoginForm = () => {
               />
             </Form.Item>
 
-            <div style={{ textAlign: "right"}}>
+            <div style={{ textAlign: "right" }}>
               <a className="login-form-forgot ">Forgot password?</a>
             </div>
 
@@ -92,7 +91,8 @@ const LoginForm = () => {
                 Log in
               </Button>
               <br />
-              <span id="extraText">Or</span> <Link to="/signup">register now!</Link>
+              <span id="extraText">Or</span>{" "}
+              <Link to="/signup">register now!</Link>
             </Form.Item>
           </Form>
         </Col>
@@ -101,4 +101,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default memo(LoginForm);

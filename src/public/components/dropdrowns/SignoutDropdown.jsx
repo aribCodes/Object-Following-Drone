@@ -1,29 +1,23 @@
-import React from "react";
+import React, { memo } from "react";
 import { Dropdown, Button } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { logoutUser, userDataOnLogin } from "../../../lib/services/firebaseService";
+import auth from "../../../config/firebase/firebaseConfig";
 
-const userEmail = localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).email;
-
+// userDataOnLogin()
+console.log(auth.currentUser)
+// const userEmail = localStorage.getItem("userEmail") && localStorage.getItem("userEmail");
 const items = [
   {
     key: "1",
-    label: <span>{userEmail&&userEmail}</span>,
+    // label: <span>{auth.currentUser.email && auth.currentUser.email}</span>,
+    label: <span>-</span>,
   },
   {
     key: "2",
-    label: (
-      <span
-        onClick={logoutUser}
-      >
-        Logout
-      </span>
-    ),
+    label: <span onClick={logoutUser}>Logout</span>,
   },
 ];
-
-function logoutUser() {
-    localStorage.removeItem("user");
-}
 
 const SignoutDropdown = () => {
   return (
@@ -42,4 +36,4 @@ const SignoutDropdown = () => {
   );
 };
 
-export default SignoutDropdown;
+export default memo(SignoutDropdown);

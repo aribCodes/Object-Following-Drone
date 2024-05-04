@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Row, Col } from "antd";
 import { Link } from "react-router-dom";
@@ -9,7 +9,6 @@ const SignupForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
     registerUser(values.email, values.password)
     
   };
@@ -126,4 +125,4 @@ const SignupForm = () => {
   );
 };
 
-export default SignupForm;
+export default memo(SignupForm);

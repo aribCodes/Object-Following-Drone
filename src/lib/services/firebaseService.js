@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  onAuthStateChanged
 } from "firebase/auth";
 import auth from "../../config/firebase/firebaseConfig";
 
@@ -9,7 +10,7 @@ export const registerUser = (email, password) => {
     .then((userCredential) => {
       // Signed up
       const user = userCredential.user;
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("user", true);
       alert("succesful Login");
       location.pathname = "/home";
     })
@@ -28,7 +29,7 @@ export const loginUser = (email, password) => {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("user", true);
       location.pathname = "/home";
     })
     .catch((error) => {
@@ -40,3 +41,22 @@ export const loginUser = (email, password) => {
       }
     });
 };
+
+export const logoutUser = () => {
+  localStorage.removeItem("user");
+  localStorage.removeItem("userEmail");
+  location.pathname = "/login";
+}
+
+export const userDataOnLogin = () => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const uid = user.uid;
+      localStorage.setItem("userEmail", JSON.stringify(user.email))
+      console.log("user id ", uid, " user :", user.email)
+    } else {
+      // User is signed out
+      alert("no data found!")
+    }
+  });
+}
