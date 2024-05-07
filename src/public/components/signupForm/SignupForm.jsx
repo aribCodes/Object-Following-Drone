@@ -1,16 +1,24 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Row, Col } from "antd";
+import { Button, Form, Input, Row, Col,Spin } from "antd";
 import { Link } from "react-router-dom";
 import "./signupForm.css";
 import { registerUser } from "../../../lib/services/firebaseService";
 
 const SignupForm = () => {
   const [form] = Form.useForm();
+  const [spinning, setSpinning] = useState(false);
+
+  const showLoader = () => {
+    setSpinning(true);
+    setTimeout(() => {
+      setSpinning(false);
+    }, 3000);
+  };
 
   const onFinish = (values) => {
     registerUser(values.email, values.password)
-    
+    showLoader();
   };
   return (
     <>
@@ -121,6 +129,7 @@ const SignupForm = () => {
           </Form>
         </Col>
       </Row>
+      <Spin spinning={spinning} fullscreen />
     </>
   );
 };

@@ -1,7 +1,9 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signOut
 } from "firebase/auth";
 import auth from "../../config/firebase/firebaseConfig";
 
@@ -11,7 +13,7 @@ export const registerUser = (email, password) => {
       // Signed up
       const user = userCredential.user;
       localStorage.setItem("user", true);
-      alert("succesful Login");
+      alert("Welcome! ", email);
       location.pathname = "/home";
     })
     .catch((error) => {
@@ -43,20 +45,43 @@ export const loginUser = (email, password) => {
 };
 
 export const logoutUser = () => {
-  localStorage.removeItem("user");
-  localStorage.removeItem("userEmail");
-  location.pathname = "/login";
+  signOut(auth).then(function() {
+    localStorage.removeItem("user");
+    location.pathname = "/login";
+  })
+};
+
+export const resetPassword = (email) => {
+  sendPasswordResetEmail(auth, email)
+  .then(() => {
+    // Password reset email sent!
+    alert("password reset email sent");
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    alert("Sorry! ", errorCode)
+  });
+
 }
 
 export const userDataOnLogin = () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const uid = user.uid;
-      localStorage.setItem("userEmail", JSON.stringify(user.email))
-      console.log("user id ", uid, " user :", user.email)
-    } else {
-      // User is signed out
-      alert("no data found!")
+  return new Promise((resolve, reject) => {
+    try {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const uid = user.uid;
+          resolve(user);
+        } else {
+          // User is signed out
+          reject(new Error("User signed out"));
+        }
+      });
+      // Return a function to unsubscribe from the auth state changes
+      return unsubscribe;
+    } catch (error) {
+      // Catch and handle any errors
+      reject(error);
     }
   });
-}
+};

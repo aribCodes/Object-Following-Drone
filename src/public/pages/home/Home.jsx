@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "../../../assets/logo.png";
-import SignoutDropdown from "../../components/dropdrowns/SignoutDropdown";
+import SignoutDropdown from "../../components/dropdrowns/SignoutDropdown.jsx";
 import "./home.css";
 
 const Home = () => {

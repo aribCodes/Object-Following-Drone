@@ -1,15 +1,25 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Row, Col } from "antd";
+import { Button, Form, Input, Row, Col, Spin } from "antd";
 import { Link } from "react-router-dom";
 import "./loginForm.css";
-import { loginUser } from "../../../lib/services/firebaseService";
+import { loginUser, resetPassword } from "../../../lib/services/firebaseService";
 
 const LoginForm = () => {
+  const [email, setEmail] = useState("");
+  const [spinning, setSpinning] = useState(false);
   const [form] = Form.useForm();
+
+  const showLoader = () => {
+    setSpinning(true);
+    setTimeout(() => {
+      setSpinning(false);
+    }, 3000);
+  };
 
   const onFinish = (values) => {
     loginUser(values.email, values.password);
+    showLoader();
   };
   return (
     <>
@@ -54,6 +64,9 @@ const LoginForm = () => {
               <Input
                 prefix={<UserOutlined className="site-form-item-icon" />}
                 placeholder="Email"
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                }}
               />
             </Form.Item>
 
@@ -78,7 +91,14 @@ const LoginForm = () => {
             </Form.Item>
 
             <div style={{ textAlign: "right" }}>
-              <a className="login-form-forgot ">Forgot password?</a>
+              <a
+                className="login-form-forgot "
+                onClick={() => {
+                  email ? resetPassword(email) : alert("please enter email");
+                }}
+              >
+                Forgot password?
+              </a>
             </div>
 
             <Form.Item>
@@ -97,6 +117,7 @@ const LoginForm = () => {
           </Form>
         </Col>
       </Row>
+      <Spin spinning={spinning} fullscreen />
     </>
   );
 };
